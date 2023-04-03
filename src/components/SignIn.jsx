@@ -5,7 +5,7 @@ const SignIn = () => {
             <input data-testid="password-input" />
             <button data-testid="signup-button">로그인</button>
         </>
-    )    
-}
+    );
+};
 
 export default SignIn;
