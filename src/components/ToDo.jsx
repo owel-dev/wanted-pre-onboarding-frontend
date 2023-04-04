@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
-const ToDo = () => {
-    const [inputValue, setInputValue] = useState('');
-    const [todos, setTodos] = useState([]);
+const Todo = () => {
+    const [addInput, setAddInput] = useState('');
+    const [todoList, setTodoList] = useState([]);
     const [reload, setReload] = useState(false);
     const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ const ToDo = () => {
                 }
                 const res_todo = response.data;
                 console.log(res_todo);
-                setTodos(res_todo);
+                setTodoList(res_todo);
                 setReload(false);
             })
             .catch((error) => {
@@ -36,17 +36,17 @@ const ToDo = () => {
     }, [reload]);
 
     const handleChange = (e) => {
-        setInputValue(e.target.value);
+        setAddInput(e.target.value);
     };
 
-    const addClick = async () => {
+    const addTodo = async () => {
         const token = Cookies.get('access_token');
 
         try {
             const response = await axios.post(
                 'https://www.pre-onboarding-selection-task.shop/todos',
                 {
-                    todo: inputValue,
+                    todo: addInput,
                 },
                 {
                     headers: {
@@ -59,14 +59,14 @@ const ToDo = () => {
                 navigate('/signin');
             }
             setReload(true); 
-            setInputValue('');
+            setAddInput('');
         } catch (error) {
             alert('에러가 발생했습니다 ', error);
             navigate('/signin');
         }
     };
 
-    const deleteClick = async (paramid) => {
+    const deleteTodo = async (paramid) => {
         const token = Cookies.get('access_token');
 
         try {
@@ -94,19 +94,19 @@ const ToDo = () => {
             <input
                 data-testid="new-todo-input"
                 type="text"
-                value={inputValue}
+                value={addInput}
                 onChange={handleChange}
             />
-            <button data-testid="new-todo-add-button" onClick={addClick}>
+            <button data-testid="new-todo-add-button" onClick={addTodo}>
                 추가
             </button>
             <ul>
-                {todos.map((item, index) => (
+                {todoList.map((item, index) => (
                     <li key={index}>
                         <input type="checkbox"></input>
                         {item.todo}
                         <button data-testid="modify-button">수정</button>
-                        <button data-testid="delete-button" onClick={() => deleteClick(item.id)}>삭제</button>
+                        <button data-testid="delete-button" onClick={() => deleteTodo(item.id)}>삭제</button>
                     </li>
                 ))}
             </ul>
@@ -114,4 +114,4 @@ const ToDo = () => {
     );
 };
 
-export default ToDo;
+export default Todo;
