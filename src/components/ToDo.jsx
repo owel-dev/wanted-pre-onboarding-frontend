@@ -58,12 +58,35 @@ const ToDo = () => {
                 alert('허가되지 않은 경로입니다, 로그인을 해 주세요.');
                 navigate('/signin');
             }
+            setReload(true); 
+            setInputValue('');
         } catch (error) {
             alert('에러가 발생했습니다 ', error);
             navigate('/signin');
         }
-        setReload(true);
-        setInputValue('');
+    };
+
+    const deleteClick = async (paramid) => {
+        const token = Cookies.get('access_token');
+
+        try {
+            const response = await axios.delete(
+                `https://www.pre-onboarding-selection-task.shop/todos/${paramid}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (response.status != 204) {
+                alert('허가되지 않은 경로입니다, 로그인을 해 주세요.');
+                navigate('/signin');
+            }
+            setReload(true); 
+        } catch (error) {
+            alert('에러가 발생했습니다 ', error);
+            navigate('/signin');
+        }
     };
 
     return (
@@ -83,7 +106,7 @@ const ToDo = () => {
                         <input type="checkbox"></input>
                         {item.todo}
                         <button data-testid="modify-button">수정</button>
-                        <button data-testid="delete-button">삭제</button>
+                        <button data-testid="delete-button" onClick={() => deleteClick(item.id)}>삭제</button>
                     </li>
                 ))}
             </ul>
