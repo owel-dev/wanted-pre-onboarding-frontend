@@ -95,12 +95,12 @@ const Todo = () => {
         }
     };
 
-    const submitEdit = async (item, input, ischecked) => {
+    const submitEdit = async (id, input, ischecked) => {
         const token = Cookies.get('access_token');
 
         try {
             const response = await axios.put(
-                `https://www.pre-onboarding-selection-task.shop/todos/${item.id}`,
+                `https://www.pre-onboarding-selection-task.shop/todos/${id}`,
                 {
                     todo: input,
                     isCompleted: ischecked,
@@ -122,6 +122,20 @@ const Todo = () => {
         }
     };
 
+    const changeTodoList = (id, setEditMode, setEditing) => {
+        setTodoList(
+            todoList.map((todoItem) =>
+                todoItem.id == id
+                    ? {
+                          ...todoItem,
+                          editMode: setEditMode,
+                          editing: setEditing,
+                      }
+                    : todoItem
+            )   
+        )
+    }
+
     return (
         <>
             <input
@@ -140,7 +154,7 @@ const Todo = () => {
                             type="checkbox"
                             checked={item.isCompleted}
                             onChange={() =>
-                                submitEdit(item, item.todo, !item.isCompleted)
+                                submitEdit(item.id, item.todo, !item.isCompleted)
                             }
                         />
                         {item.editMode ? (
@@ -148,24 +162,14 @@ const Todo = () => {
                                 <input
                                     value={item.editing}
                                     onChange={(e) =>
-                                        setTodoList(
-                                            todoList.map((todoItem) =>
-                                                todoItem.id == item.id
-                                                    ? {
-                                                          ...todoItem,
-                                                          editing:
-                                                              e.target.value,
-                                                      }
-                                                    : todoItem
-                                            )
-                                        )
+                                        changeTodoList(item.id, item.editMode, e.target.value)
                                     }
                                 />
                                 <button
                                     data-testid="submit-button"
                                     onClick={() =>
                                         submitEdit(
-                                            item,
+                                            item.id,
                                             item.editing,
                                             item.isCompleted
                                         )
@@ -176,17 +180,7 @@ const Todo = () => {
                                 <button
                                     data-testid="cancel-button"
                                     onClick={() =>
-                                        setTodoList(
-                                            todoList.map((todoItem) =>
-                                                todoItem.id == item.id
-                                                    ? {
-                                                          ...todoItem,
-                                                          editMode: false,
-                                                          editing: item.todo,
-                                                      }
-                                                    : todoItem
-                                            )
-                                        )
+                                        changeTodoList(item.id, false, item.todo)
                                     }
                                 >
                                     취소
@@ -198,19 +192,7 @@ const Todo = () => {
                                 <button
                                     data-testid="modify-button"
                                     onClick={() =>
-                                        setTodoList(
-                                            todoList.map((todoItem) =>
-                                                todoItem.id == item.id
-                                                    ? {
-                                                          ...todoItem,
-                                                          editMode: true,
-                                                      }
-                                                    : {
-                                                          ...todoItem,
-                                                          editMode: false,
-                                                      }
-                                            )
-                                        )
+                                        changeTodoList(item.id, true, item.todo)
                                     }
                                 >
                                     수정
