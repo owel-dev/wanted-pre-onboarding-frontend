@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Todo = () => {
   const [addInput, setAddInput] = useState('');
@@ -198,6 +199,10 @@ const Todo = () => {
           </li>
         ))}
       </ul>
+      <br />
+      <Link to="/">홈</Link> &nbsp;&nbsp;
+      <Link to="/signup">회원가입</Link> &nbsp;&nbsp;
+      <Link to="/signin">로그인</Link>
     </>
   );
 };

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 
 const SignIn = () => {
   const [stateEmail, setStateEmail] = useState('');
@@ -92,6 +93,9 @@ const SignIn = () => {
           로그인
         </button>
       </form>
+      <br />
+      <Link to="/">홈</Link> &nbsp;&nbsp;
+      <Link to="/signup">회원가입</Link>
     </>
   );
 };
