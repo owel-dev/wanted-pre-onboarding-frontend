@@ -17,12 +17,12 @@ const Test = () => {
 
   return (
     <div className="App">
-      <h1>Sign Up</h1>
+      <h1>회원가입</h1>
 
       <Form submit={submit} initialValues={initialValues}>
         <>
-          <FormInput label="Email Address" type="email" name="email" />
-          <FormInput label="Password" type="password" name="password" />
+          <FormInput label="이메일" type="email" name="email" />
+          <FormInput label="비밀번호" type="password" name="password" />
         </>
       </Form>
       <p>{message}</p>
