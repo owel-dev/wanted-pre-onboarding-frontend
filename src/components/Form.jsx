@@ -6,11 +6,12 @@ export const FormContext = React.createContext({
   form: {},
 });
 
-function Form({ children, submit, initialValues }) {
+function Form({ children, handleSubmit, initialValues, buttonName }) {
   Form.propTypes = {
     children: PropTypes.any,
-    submit: PropTypes.func,
-    initialValues: PropTypes.object,
+    handleSubmit: PropTypes.func.isRequired,
+    initialValues: PropTypes.object.isRequired,
+    buttonName: PropTypes.string.isRequired,
   };
 
   const [form, setForm] = useState(initialValues);
@@ -29,7 +30,7 @@ function Form({ children, submit, initialValues }) {
       className="form"
       onSubmit={(e) => {
         e.preventDefault();
-        submit(form);
+        handleSubmit(form);
       }}
     >
       <FormContext.Provider
@@ -40,7 +41,7 @@ function Form({ children, submit, initialValues }) {
       >
         {children}
       </FormContext.Provider>
-      <button type="button">Submit</button>
+      <button type="submit">{buttonName}</button>
     </form>
   );
 }
