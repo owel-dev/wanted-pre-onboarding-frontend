@@ -1,110 +1,103 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import FormInput from './FormInput';
+import Form from './Form';
+import { handleError } from '../handleSubmit';
 
 const Todo = () => {
-  const [addInput, setAddInput] = useState('');
   const [todoList, setTodoList] = useState([]);
-  const [reload, setReload] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = Cookies.get('access_token');
-
-    const response = axios
+    axios
       .get('https://www.pre-onboarding-selection-task.shop/todos', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        if (response.status != 200) {
-          alert('허가되지 않은 경로입니다, 로그인을 해 주세요.');
-          navigate('/signin');
-        }
-        const res_todo = response.data;
-        console.log(res_todo);
+        const responseTodoList = response.data;
         setTodoList(
-          res_todo.map((item) => ({
+          responseTodoList.map((item) => ({
             ...item,
             editMode: false,
-            editing: item.todo,
           }))
         );
-        setReload(false);
       })
       .catch((error) => {
-        alert('에러가 발생했습니다 ', error);
+        handleError(error, 'Todo 목록 가져오기');
         navigate('/signin');
       });
-  }, [reload]);
+  }, []);
 
-  const handleChange = (e, setStateFunc) => {
-    setStateFunc(e.target.value);
-  };
-
-  const addTodo = async () => {
+  const handleCreateTodo = async (createTodoInput) => {
     const token = Cookies.get('access_token');
-
+    console.log(createTodoInput);
     try {
       const response = await axios.post(
         'https://www.pre-onboarding-selection-task.shop/todos',
-        {
-          todo: addInput,
-        },
+        createTodoInput,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      if (response.status != 201) {
-        alert('허가되지 않은 경로입니다, 로그인을 해 주세요.');
-        navigate('/signin');
-      }
-      setReload(true);
-      setAddInput('');
+      const responseTodo = response.data;
+      responseTodo['editMode'] = false;
+      console.log(responseTodo);
+      setTodoList([...todoList, responseTodo]);
     } catch (error) {
-      alert('에러가 발생했습니다 ', error);
+      handleError(error, 'Todo 생성');
       navigate('/signin');
     }
   };
 
-  const deleteTodo = async (paramid) => {
+  const handleDeleteTodo = async (deleteTodoItem) => {
     const token = Cookies.get('access_token');
-
+    const deleteTodoItemId = deleteTodoItem.id;
     try {
-      const response = await axios.delete(
-        `https://www.pre-onboarding-selection-task.shop/todos/${paramid}`,
+      await axios.delete(
+        `https://www.pre-onboarding-selection-task.shop/todos/${deleteTodoItemId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      if (response.status != 204) {
-        alert('허가되지 않은 경로입니다, 로그인을 해 주세요.');
-        navigate('/signin');
-      }
-      setReload(true);
+      setTodoList(
+        todoList.filter((item) => {
+          return item.id !== deleteTodoItemId;
+        })
+      );
     } catch (error) {
-      alert('에러가 발생했습니다 ', error);
-      navigate('/signin');
+      handleError(error, '삭제');
     }
   };
 
-  const submitEdit = async (id, input, ischecked) => {
-    const token = Cookies.get('access_token');
+  const handleEditMode = (editModeTodo) => {
+    setTodoList(
+      todoList.map((item) => {
+        return item.id === editModeTodo.id
+          ? { ...item, editMode: !item.editMode }
+          : item;
+      })
+    );
+  };
 
+  const handleSubmitEdit = async (submitEditTodo) => {
+    const token = Cookies.get('access_token');
+    const {id, todo, isCompleted} = submitEditTodo;
     try {
       const response = await axios.put(
         `https://www.pre-onboarding-selection-task.shop/todos/${id}`,
         {
-          todo: input,
-          isCompleted: ischecked,
+          todo,
+          isCompleted,
         },
         {
           headers: {
@@ -112,98 +105,79 @@ const Todo = () => {
           },
         }
       );
-      if (response.status != 200) {
-        alert('허가되지 않은 경로입니다, 로그인을 해 주세요.');
-        navigate('/signin');
-      }
-      setReload(true);
+
+      const responseTodo = response.data;
+      console.log(responseTodo);
+      setTodoList(
+        todoList.map((item) => {
+          return item.id == responseTodo.id ? responseTodo : item;
+        })
+      );
     } catch (error) {
-      alert('에러가 발생했습니다 ', error);
-      navigate('/signin');
+      handleError(error, 'Todo 수정 제출');
     }
   };
 
-  const changeTodoList = (id, setEditMode, setEditing) => {
-    setTodoList(
-      todoList.map((todoItem) =>
-        todoItem.id == id
-          ? {
-              ...todoItem,
-              editMode: setEditMode,
-              editing: setEditing,
-            }
-          : todoItem
-      )
-    );
-  };
-
   return (
-    <>
-      <input
-        data-testid="new-todo-input"
-        type="text"
-        value={addInput}
-        onChange={(e) => handleChange(e, setAddInput)}
-      />
-      <button data-testid="new-todo-add-button" onClick={addTodo}>
-        추가
-      </button>
+    <div className="todo">
+      <h1>Todo</h1>
+      <Form handleSubmit={handleCreateTodo} initialValues={{ todo: '' }}>
+        <FormInput type="text" name="todo" title="hello" pattern=".+" />
+        <button type="submit">추가</button>
+      </Form>
+      <br />
       <ul>
-        {todoList.map((item, index) => (
-          <li key={index}>
-            <input
-              type="checkbox"
-              checked={item.isCompleted}
-              onChange={() => submitEdit(item.id, item.todo, !item.isCompleted)}
-            />
-            {item.editMode ? (
-              <>
-                <input
-                  value={item.editing}
-                  onChange={(e) =>
-                    changeTodoList(item.id, item.editMode, e.target.value)
-                  }
-                />
-                <button
-                  data-testid="submit-button"
-                  onClick={() =>
-                    submitEdit(item.id, item.editing, item.isCompleted)
-                  }
-                >
-                  제출
-                </button>
-                <button
-                  data-testid="cancel-button"
-                  onClick={() => changeTodoList(item.id, false, item.todo)}
-                >
-                  취소
-                </button>
-              </>
-            ) : (
-              <>
-                {item.todo}
-                <button
-                  data-testid="modify-button"
-                  onClick={() => changeTodoList(item.id, true, item.todo)}
-                >
-                  수정
-                </button>
-                <button
-                  data-testid="delete-button"
-                  onClick={() => deleteTodo(item.id)}
-                >
-                  삭제
-                </button>
-              </>
-            )}
-          </li>
-        ))}
+        {todoList.map((item, index) => {
+          const { id, isCompleted, todo, editMode } = item;
+          return (
+            <li key={index}>
+              <input
+                type="checkbox"
+                checked={isCompleted}
+                onChange={() =>
+                  handleSubmitEdit({
+                    id,
+                    todo,
+                    isCompleted: !isCompleted,
+                  })
+                }
+              />
+              {editMode ? (
+                <>
+                  <Form
+                    handleSubmit={handleSubmitEdit}
+                    initialValues={{
+                      id,
+                      todo,
+                      isCompleted,
+                    }}
+                  >
+                    <FormInput
+                      type="text"
+                      name="todo"
+                      title="hello"
+                      pattern=".+"
+                    />
+                    <button type="submit">제출</button>
+                  </Form>
+                  <button onClick={() => handleEditMode(item)}>취소</button>
+                </>
+              ) : (
+                <>
+                  {todo}
+                  <button onClick={() => handleEditMode(item)}>수정</button>
+                  <button onClick={() => handleDeleteTodo(item)}>삭제</button>
+                </>
+              )}
+            </li>
+          );
+        })}
       </ul>
       <br />
       <Link to="/">홈</Link> &nbsp;&nbsp;
-      <Link to="/signup">회원가입</Link> &nbsp;&nbsp;
-      <Link to="/signin">로그인</Link>
-    </>
+      <Link to="/sigin">로그인</Link> &nbsp;&nbsp;
+      <Link to="/signup">회원가입</Link>
+    </div>
   );
 };
 
