@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useContext } from 'react';
 import { FormContext } from './Form';
 
 const FormInput = ({ testid, label, type, name, pattern, title }) => {
   FormInput.propTypes = {
     testid: PropTypes.string,
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string.isRequired,
     pattern: PropTypes.string,
@@ -24,7 +23,7 @@ const FormInput = ({ testid, label, type, name, pattern, title }) => {
 
   return (
     <div className="FormInput">
-      <label>{label}</label>
+      {label !== '' ? <label>{label}</label> : null}
       <input
         data-testid={testid}
         type={type}
@@ -33,6 +32,7 @@ const FormInput = ({ testid, label, type, name, pattern, title }) => {
         onChange={handleFormChange}
         pattern={pattern}
         title={title}
+        required
       />
     </div>
   );

@@ -6,12 +6,11 @@ export const FormContext = React.createContext({
   form: {},
 });
 
-function Form({ children, handleSubmit, initialValues, buttonName }) {
+function Form({ children, handleSubmit, initialValues }) {
   Form.propTypes = {
-    children: PropTypes.any,
+    children: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     initialValues: PropTypes.object.isRequired,
-    buttonName: PropTypes.string.isRequired,
   };
 
   const [form, setForm] = useState(initialValues);
@@ -41,7 +40,6 @@ function Form({ children, handleSubmit, initialValues, buttonName }) {
       >
         {children}
       </FormContext.Provider>
-      <button type="submit">{buttonName}</button>
     </form>
   );
 }
