@@ -37,7 +37,6 @@ const Todo = () => {
 
   const handleCreateTodo = async (createTodoInput) => {
     const token = Cookies.get('access_token');
-    console.log(createTodoInput);
     try {
       const response = await axios.post(
         `${apiURL}/todos`,
@@ -50,7 +49,6 @@ const Todo = () => {
       );
       const responseTodo = response.data;
       responseTodo['editMode'] = false;
-      console.log(responseTodo);
       setTodoList([...todoList, responseTodo]);
     } catch (error) {
       handleError(error, 'Todo 생성');
@@ -108,7 +106,6 @@ const Todo = () => {
       );
 
       const responseTodo = response.data;
-      console.log(responseTodo);
       setTodoList(
         todoList.map((item) => {
           return item.id == responseTodo.id ? responseTodo : item;

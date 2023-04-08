@@ -17,7 +17,6 @@ const SignUp = () => {
 
   const handleSubmit = async (formInputData) => {
     try {
-      console.log(apiURL)
       await axios.post(
         `${apiURL}/auth/signup`,
         formInputData
