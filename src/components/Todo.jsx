@@ -120,8 +120,8 @@ const Todo = () => {
     <div className="todo">
       <h1>Todo</h1>
       <Form handleSubmit={handleCreateTodo} initialValues={{ todo: '' }}>
-        <FormInput type="text" name="todo" title="hello" pattern=".+" />
-        <button type="submit">추가</button>
+        <FormInput data-testid="new-todo-input" type="text" name="todo" title="hello" pattern=".+" />
+        <button data-testid="new-todo-add-button" type="submit">추가</button>
       </Form>
       <br />
       <ul>
@@ -151,20 +151,21 @@ const Todo = () => {
                     }}
                   >
                     <FormInput
+                      data-testid="modify-input"
                       type="text"
                       name="todo"
                       title="hello"
                       pattern=".+"
                     />
-                    <button type="submit">제출</button>
+                    <button data-testid="submit-button" type="submit">제출</button>
                   </Form>
-                  <button onClick={() => handleEditMode(item)}>취소</button>
+                  <button data-testid="cancel-button" onClick={() => handleEditMode(item)}>취소</button>
                 </>
               ) : (
                 <>
                   {todo}
-                  <button onClick={() => handleEditMode(item)}>수정</button>
-                  <button onClick={() => handleDeleteTodo(item)}>삭제</button>
+                  <button data-testid="modify-button" onClick={() => handleEditMode(item)}>수정</button>
+                  <button data-testid="delete-button" onClick={() => handleDeleteTodo(item)}>삭제</button>
                 </>
               )}
             </li>

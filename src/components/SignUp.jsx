@@ -33,6 +33,7 @@ const SignUp = () => {
       <h1>회원가입</h1>
       <Form handleSubmit={handleSubmit} initialValues={initialValues}>
         <FormInput
+          data-testid="email-input"
           label="이메일"
           type="text"
           name="email"
@@ -40,13 +41,14 @@ const SignUp = () => {
           title="이메일은 '@' 기호를 포함해야 합니다."
         />
         <FormInput
+          data-testid="password-input"
           label="비밀번호"
           type="password"
           name="password"
           pattern=".{8,}"
           title="비밀번호는 8자 이상이어야 합니다."
         />
-        <button type="submit">회원가입</button>
+        <button data-testid="signup-button" type="submit">회원가입</button>
       </Form>
       <br />
       <Link to="/">홈</Link> &nbsp;&nbsp;
