@@ -4,7 +4,7 @@ import { FormContext } from './Form';
 
 const FormInput = ({ testid, label, type, name, pattern, title }) => {
   FormInput.propTypes = {
-    testid: PropTypes.string,
+    testid: PropTypes.string.isRequired,
     label: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string.isRequired,
@@ -13,7 +13,7 @@ const FormInput = ({ testid, label, type, name, pattern, title }) => {
   };
 
   FormInput.defaultProps = {
-    testid: '',
+    label: '',
     type: 'text',
     pattern: '',
     title: '',

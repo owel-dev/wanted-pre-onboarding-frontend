@@ -33,7 +33,7 @@ const SignUp = () => {
       <h1>회원가입</h1>
       <Form handleSubmit={handleSubmit} initialValues={initialValues}>
         <FormInput
-          data-testid="email-input"
+          testid="email-input"
           label="이메일"
           type="text"
           name="email"
@@ -41,7 +41,7 @@ const SignUp = () => {
           title="이메일은 '@' 기호를 포함해야 합니다."
         />
         <FormInput
-          data-testid="password-input"
+          testid="password-input"
           label="비밀번호"
           type="password"
           name="password"

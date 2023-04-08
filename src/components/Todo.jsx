@@ -120,7 +120,7 @@ const Todo = () => {
     <div className="todo">
       <h1>Todo</h1>
       <Form handleSubmit={handleCreateTodo} initialValues={{ todo: '' }}>
-        <FormInput data-testid="new-todo-input" type="text" name="todo" title="hello" pattern=".+" />
+        <FormInput testid="new-todo-input" type="text" name="todo" title="hello" pattern=".+" />
         <button data-testid="new-todo-add-button" type="submit">추가</button>
       </Form>
       <br />
@@ -151,7 +151,7 @@ const Todo = () => {
                     }}
                   >
                     <FormInput
-                      data-testid="modify-input"
+                      testid="modify-input"
                       type="text"
                       name="todo"
                       title="hello"
