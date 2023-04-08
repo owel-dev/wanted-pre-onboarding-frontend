@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import FormInput from './FormInput';
 import Form from './Form';
 import { handleError } from '../handleSubmit';
+import { apiURL } from '../envVariables';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -16,8 +17,9 @@ const SignUp = () => {
 
   const handleSubmit = async (formInputData) => {
     try {
+      console.log(apiURL)
       await axios.post(
-        'https://www.pre-onboarding-selection-task.shop/auth/signup',
+        `${apiURL}/auth/signup`,
         formInputData
       );
       alert('회원가입이 완료되었습니다.');

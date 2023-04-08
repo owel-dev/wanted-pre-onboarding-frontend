@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import FormInput from './FormInput';
 import Form from './Form';
 import { handleError } from '../handleSubmit';
+import { apiURL } from '../envVariables';
 
 const Todo = () => {
   const [todoList, setTodoList] = useState([]);
@@ -14,7 +15,7 @@ const Todo = () => {
   useEffect(() => {
     const token = Cookies.get('access_token');
     axios
-      .get('https://www.pre-onboarding-selection-task.shop/todos', {
+      .get(`${apiURL}/todos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,7 +40,7 @@ const Todo = () => {
     console.log(createTodoInput);
     try {
       const response = await axios.post(
-        'https://www.pre-onboarding-selection-task.shop/todos',
+        `${apiURL}/todos`,
         createTodoInput,
         {
           headers: {
@@ -62,7 +63,7 @@ const Todo = () => {
     const deleteTodoItemId = deleteTodoItem.id;
     try {
       await axios.delete(
-        `https://www.pre-onboarding-selection-task.shop/todos/${deleteTodoItemId}`,
+        `${apiURL}/todos/${deleteTodoItemId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -94,7 +95,7 @@ const Todo = () => {
     const {id, todo, isCompleted} = submitEditTodo;
     try {
       const response = await axios.put(
-        `https://www.pre-onboarding-selection-task.shop/todos/${id}`,
+        `${apiURL}/todos/${id}`,
         {
           todo,
           isCompleted,
@@ -175,7 +176,7 @@ const Todo = () => {
       </ul>
       <br />
       <Link to="/">홈</Link> &nbsp;&nbsp;
-      <Link to="/sigin">로그인</Link> &nbsp;&nbsp;
+      <Link to="/signin">로그인</Link> &nbsp;&nbsp;
       <Link to="/signup">회원가입</Link>
     </div>
   );

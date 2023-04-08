@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import FormInput from './FormInput';
 import Form from './Form';
 import { handleError } from '../handleSubmit';
+import { apiURL } from '../envVariables';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const SignIn = () => {
   const handleSubmit = async (formInputData) => {
     try {
       const response = await axios.post(
-        'https://www.pre-onboarding-selection-task.shop/auth/signin',
+        `${apiURL}/auth/signin`,
         formInputData
       );
       const { access_token } = response.data;
