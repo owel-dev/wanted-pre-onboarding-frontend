@@ -9,47 +9,47 @@ import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 
 const Todo = () => {
-  const [todoList, setTodoList] = useState([]);
-  const navigate = useNavigate();
+    const [todoList, setTodoList] = useState([]);
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = Cookies.get('access_token');
-    if (!token) {
-      navigate('/signin');
-      return;
-    }
+    useEffect(() => {
+        const token = Cookies.get('access_token');
+        if (!token) {
+            navigate('/signin');
+            return;
+        }
 
-    axios
-      .get(`${apiURL}/todos`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        const responseTodoList = response.data;
-        setTodoList(
-          responseTodoList.map((item) => ({
-            ...item,
-            editMode: false,
-          }))
-        );
-      })
-      .catch((error) => {
-        handleError(error, 'Todo 목록 가져오기');
-        navigate('/signin');
-      });
-  }, []);
+        axios
+            .get(`${apiURL}/todos`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((response) => {
+                const responseTodoList = response.data;
+                setTodoList(
+                    responseTodoList.map((item) => ({
+                        ...item,
+                        editMode: false,
+                    }))
+                );
+            })
+            .catch((error) => {
+                handleError(error, 'Todo 목록 가져오기');
+                navigate('/signin');
+            });
+    }, []);
 
-  return (
-    <div>
-      <TodoForm todoList={todoList} setTodoList={setTodoList} />
-      <TodoList todoList={todoList} setTodoList={setTodoList} />
-      <br />
-      <Link to="/">홈</Link> &nbsp;&nbsp;
-      <Link to="/signin">로그인</Link> &nbsp;&nbsp;
-      <Link to="/signup">회원가입</Link>
-    </div>
-  );
+    return (
+        <div>
+            <TodoForm todoList={todoList} setTodoList={setTodoList} />
+            <TodoList todoList={todoList} setTodoList={setTodoList} />
+            <br />
+            <Link to="/">홈</Link> &nbsp;&nbsp;
+            <Link to="/signin">로그인</Link> &nbsp;&nbsp;
+            <Link to="/signup">회원가입</Link>
+        </div>
+    );
 };
 
 export default Todo;
