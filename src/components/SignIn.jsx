@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -11,17 +11,16 @@ import { apiURL } from '../envVariables';
 const SignIn = () => {
   const navigate = useNavigate();
 
-  const initialValues = {
-    email: '',
-    password: '',
-  };
+  useEffect(() => {
+    const token = Cookies.get('access_token');
+    if (token) {
+      navigate('/todo');
+    }
+  }, []);
 
   const handleSubmit = async (formInputData) => {
     try {
-      const response = await axios.post(
-        `${apiURL}/auth/signin`,
-        formInputData
-      );
+      const response = await axios.post(`${apiURL}/auth/signin`, formInputData);
       const { access_token } = response.data;
       Cookies.set('access_token', access_token);
       navigate('/todo');
@@ -31,9 +30,13 @@ const SignIn = () => {
   };
 
   return (
-    <div className="signin">
+    <div>
       <h1>로그인</h1>
-      <Form handleSubmit={handleSubmit} initialValues={initialValues}>
+      <Form
+        handleSubmit={handleSubmit}
+        buttonName="로그인"
+        buttonTestId="signin-button"
+      >
         <FormInput
           testid="email-input"
           label="이메일"
@@ -50,7 +53,6 @@ const SignIn = () => {
           pattern=".{8,}"
           title="비밀번호는 8자 이상이어야 합니다."
         />
-        <button data-testid="signin-button" type="submit">로그인</button>
       </Form>
       <br />
       <Link to="/">홈</Link> &nbsp;&nbsp;
