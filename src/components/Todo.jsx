@@ -14,6 +14,11 @@ const Todo = () => {
 
   useEffect(() => {
     const token = Cookies.get('access_token');
+    if (!token) {
+      navigate('/signin');
+      return;
+    }
+
     axios
       .get(`${apiURL}/todos`, {
         headers: {
@@ -38,15 +43,11 @@ const Todo = () => {
   const handleCreateTodo = async (createTodoInput) => {
     const token = Cookies.get('access_token');
     try {
-      const response = await axios.post(
-        `${apiURL}/todos`,
-        createTodoInput,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post(`${apiURL}/todos`, createTodoInput, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const responseTodo = response.data;
       responseTodo['editMode'] = false;
       setTodoList([...todoList, responseTodo]);
@@ -60,14 +61,11 @@ const Todo = () => {
     const token = Cookies.get('access_token');
     const deleteTodoItemId = deleteTodoItem.id;
     try {
-      await axios.delete(
-        `${apiURL}/todos/${deleteTodoItemId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${apiURL}/todos/${deleteTodoItemId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setTodoList(
         todoList.filter((item) => {
           return item.id !== deleteTodoItemId;
@@ -90,7 +88,7 @@ const Todo = () => {
 
   const handleSubmitEdit = async (submitEditTodo) => {
     const token = Cookies.get('access_token');
-    const {id, todo, isCompleted} = submitEditTodo;
+    const { id, todo, isCompleted } = submitEditTodo;
     try {
       const response = await axios.put(
         `${apiURL}/todos/${id}`,
@@ -117,11 +115,19 @@ const Todo = () => {
   };
 
   return (
-    <div className="todo">
+    <div>
       <h1>Todo</h1>
-      <Form handleSubmit={handleCreateTodo} initialValues={{ todo: '' }}>
-        <FormInput testid="new-todo-input" type="text" name="todo" title="hello" pattern=".+" />
-        <button data-testid="new-todo-add-button" type="submit">추가</button>
+      <Form
+        handleSubmit={handleCreateTodo}
+        buttonName="추가"
+        buttonTestId="new-todo-add-button"
+      >
+        <FormInput
+          testid="new-todo-input"
+          type="text"
+          name="todo"
+          pattern=".+"
+        />
       </Form>
       <br />
       <ul>
@@ -143,29 +149,45 @@ const Todo = () => {
               {editMode ? (
                 <>
                   <Form
-                    handleSubmit={handleSubmitEdit}
-                    initialValues={{
-                      id,
-                      todo,
-                      isCompleted,
+                    initialForm={{
+                      id: id,
+                      todo: todo,
+                      isCompleted: isCompleted,
                     }}
+                    handleSubmit={handleSubmitEdit}
+                    buttonName="제출"
+                    buttonTestId="submit-button"
                   >
                     <FormInput
                       testid="modify-input"
                       type="text"
                       name="todo"
-                      title="hello"
+                      value={todo}
                       pattern=".+"
                     />
-                    <button data-testid="submit-button" type="submit">제출</button>
                   </Form>
-                  <button data-testid="cancel-button" onClick={() => handleEditMode(item)}>취소</button>
+                  <button
+                    data-testid="cancel-button"
+                    onClick={() => handleEditMode(item)}
+                  >
+                    취소
+                  </button>
                 </>
               ) : (
                 <>
                   {todo}
-                  <button data-testid="modify-button" onClick={() => handleEditMode(item)}>수정</button>
-                  <button data-testid="delete-button" onClick={() => handleDeleteTodo(item)}>삭제</button>
+                  <button
+                    data-testid="modify-button"
+                    onClick={() => handleEditMode(item)}
+                  >
+                    수정
+                  </button>
+                  <button
+                    data-testid="delete-button"
+                    onClick={() => handleDeleteTodo(item)}
+                  >
+                    삭제
+                  </button>
                 </>
               )}
             </li>
