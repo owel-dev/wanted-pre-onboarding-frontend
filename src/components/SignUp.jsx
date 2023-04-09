@@ -41,8 +41,7 @@ const SignUp = () => {
                     label="이메일"
                     type="text"
                     name="email"
-                    pattern=".*@.*"
-                    title="이메일은 '@' 기호를 포함해야 합니다."
+                    pattern="(?=.*@).{1,}"
                 />
                 <FormInput
                     testid="password-input"
@@ -50,7 +49,6 @@ const SignUp = () => {
                     type="password"
                     name="password"
                     pattern=".{8,}"
-                    title="비밀번호는 8자 이상이어야 합니다."
                 />
             </Form>
             <br />
