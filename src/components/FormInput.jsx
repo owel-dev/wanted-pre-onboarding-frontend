@@ -10,7 +10,6 @@ const FormInput = ({
     name,
     value = '',
     pattern = '',
-    title = '',
 }) => {
     FormInput.propTypes = {
         testid: PropTypes.string.isRequired,
@@ -19,7 +18,6 @@ const FormInput = ({
         name: PropTypes.string.isRequired,
         value: PropTypes.string,
         pattern: PropTypes.string,
-        title: PropTypes.string,
     };
     const { submitForm, setSubmitForm, invalidInputs, setInvalidInputs } =
         useContext(FormContext);
