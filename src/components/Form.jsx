@@ -6,26 +6,22 @@ export const FormContext = React.createContext();
 
 function Form({
   children,
-  initialForm,
+  initialForm = {},
   handleSubmit,
   buttonName,
   buttonTestId,
 }) {
   Form.propTypes = {
     children: PropTypes.any.isRequired,
-    initialForm: PropTypes.object.isRequired,
+    initialForm: PropTypes.object,
     handleSubmit: PropTypes.func.isRequired,
     buttonName: PropTypes.string.isRequired,
     buttonTestId: PropTypes.string.isRequired,
   };
 
-  Form.defaultProps = {
-    initialForm: {},
-  };
-
   const [submitForm, setSubmitForm] = useState(initialForm);
   const [invalidInputs, setInvalidInputs] = useState({});
-
+  
   return (
     <form
       onSubmit={(e) => {
@@ -41,7 +37,7 @@ function Form({
       <button
         type="submit"
         data-testid={buttonTestId}
-        disabled={invalidInputs.length}
+        disabled={Object.keys(invalidInputs).length}
       >
         {buttonName}
       </button>

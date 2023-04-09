@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FormContext } from './Form';
 import { useEffect, useContext } from 'react';
 
-const FormInput = ({ testid, label, type, name, value, pattern, title }) => {
+const FormInput = ({ testid, label = '', type, name, value = '', pattern = '', title = '' }) => {
   FormInput.propTypes = {
     testid: PropTypes.string.isRequired,
     label: PropTypes.string,
@@ -13,14 +13,6 @@ const FormInput = ({ testid, label, type, name, value, pattern, title }) => {
     pattern: PropTypes.string,
     title: PropTypes.string,
   };
-
-  FormInput.defaultProps = {
-    label: '',
-    value: '',
-    pattern: '',
-    title: '',
-  };
-
   const { submitForm, setSubmitForm, invalidInputs, setInvalidInputs } =
     useContext(FormContext);
   const [valueState, setValueState] = useState(value);
@@ -47,7 +39,6 @@ const FormInput = ({ testid, label, type, name, value, pattern, title }) => {
         value={valueState}
         onChange={(e) => setValueState(e.target.value)}
       />
-      {name in invalidInputs ? <p>{title}</p> : null}
     </div>
   );
 };
